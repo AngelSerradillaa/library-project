@@ -1,0 +1,25 @@
+#status-div{
+    gap: 20px;
+    align-items: center;
+    margin-bottom: 30px;
+}
+#status-div button{
+    padding: auto;
+    height: 30px;
+}
+
+#user-form{
+    margin-bottom: 30px;
+}
+
+#login-div{
+    margin-bottom: 30px;
+}
+#book-form{
+    margin-top: 30px;
+}
+
+#books-list li{
+    display: flex;
+    gap: 7px;
+}

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Library</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>Librería de Angel</h1>
+    <div id="status-div">
+        <p id="status-display">Not logged in</p>
+        <button id="logout-button">Logout</button>
+    </div>
+    <div id = "login-div">
+        <form id="login-form">
+            <p>Login:</p>
+            <input id="login-email" placeholder="Email" required>
+            <button type="submit">Login</button>
+        </form>
+    </div>    
+    <form id="user-form">
+        <p>Añadir usuario:</p>
+        <input id="user-name" placeholder="Nombre" required>
+        <input id="user-email" placeholder="Email" required>
+        <input id="user-birthdate" type="date" placeholder="Fecha de nacimiento" required>
+        <button type="submit">Añadir Usuario</button>
+    </form>
+    <hr>
+    <form id="book-form">
+        <p>Añadir libro:</p>
+        <input id="book-title" placeholder="Título" required>
+        <input id="book-author" placeholder="Autor" required>
+        <input id="book-year" type="number" placeholder="Año" required>
+        <input id="book-genre" placeholder="Género" required>
+        <input id="book-copies" type="number" placeholder="Nº Copias" required>
+        <button type="submit">Añadir Libro</button>
+    </form>
+    <p>Buscar Libro:</p>
+    <input id="search-title" placeholder="Búsqueda por Título" required>
+    <input id="search-author" placeholder="Búsqueda por Autor" required>
+    <button id="search-button">Buscar</button>
+    <p>Lista de libros:</p>
+    <ul id="books-list"></ul>
+    
+
+    <script src="./src/scripts/main.js" defer></script>
+</body>
+</html>
