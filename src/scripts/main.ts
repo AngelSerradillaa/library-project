@@ -35,7 +35,6 @@ class Book implements IBook {
     }
 }
 
-// src/models/User.ts
 interface IUser {
     name: string;
     email: string;
