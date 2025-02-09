@@ -1,4 +1,16 @@
-
+//Decorador para el debug
+function decoratorDebug(
+    target: any,
+    propertyKey: string,
+    descriptor: PropertyDescriptor
+): PropertyDescriptor {
+    const originalMethod = descriptor.value;
+    descriptor.value = function (...args: any[]) {
+        console.log(`Ejecutando el método "${propertyKey}" con argumentos: ${args.map(arg => JSON.stringify(arg)).join(', ')}`);
+        return originalMethod.apply(this, args);
+    };
+    return descriptor;
+}
 
 // src/models/Book.ts
 interface IBook {
@@ -49,7 +61,7 @@ class User implements IUser {
         public email: string,
         public birthDate: Date
     ) {}
-
+    @decoratorDebug
     public borrowBook(book: Book): boolean {
         if (book.borrowBook()) {
             console.log(book.title);
@@ -58,7 +70,7 @@ class User implements IUser {
         }
         return false;
     }
-
+    @decoratorDebug
     public returnBook(book: Book): void {
         if (this.borrowedBooks.has(book.title)) {
             book.returnBook();
@@ -77,6 +89,7 @@ class Library {
     public users: User[] = [];
     public currentUser: User | null = null;
 
+    @decoratorDebug
     public addBook(book: Book): string {
         const exists = this.books.some(
             b => b.title.toLowerCase() === book.title.toLowerCase() && b.author.toLowerCase() === book.author.toLowerCase()
@@ -89,26 +102,27 @@ class Library {
         return `El libro "${book.title}" de "${book.author}" ha sido añadido.`;
     }
 
+    @decoratorDebug
     public removeBook(title: string, author: string): void {
         this.books = this.books.filter(
             book => !(book.title.toLowerCase() === title.toLowerCase() && book.author.toLowerCase() === author.toLowerCase())
         );
     }
-
+    @decoratorDebug
     public findBook(title: string, author: string): Book | undefined {
         return this.books.find(
             book => book.title.toLowerCase() === title.toLowerCase() && book.author.toLowerCase() === author.toLowerCase()
         );
     }
-
+    @decoratorDebug
     public addUser(user: User): void {
         this.users.push(user);
     }
-
+    @decoratorDebug
     public findUser(email: string): User | undefined {
         return this.users.find(user => user.email === email);
     }
-
+    @decoratorDebug
     public loginUser(email: string): string {
         const user = this.findUser(email);
         if (user) {
@@ -117,7 +131,7 @@ class Library {
         }
         return `El usuario con el "${email}" no ha sido encontrado.`;
     }
-
+    @decoratorDebug
     public logoutUser(): string {
         if (this.currentUser) {
             const name = this.currentUser.name;
@@ -126,7 +140,7 @@ class Library {
         }
         return `No hay usuario logueado.`;
     }
-
+    @decoratorDebug
     public deleteUser(): string {
         if (this.currentUser) {
             const userToDelete = this.currentUser;
@@ -136,11 +150,11 @@ class Library {
         }
         return `No hay usuario logueado que eliminar.`;
     }
-
+    @decoratorDebug
     public getCurrentUser(): User | null {
         return this.currentUser;
     }
-
+    @decoratorDebug
     public borrowBookByDetails(title: string, author: string): string {
         if (!this.currentUser) {
             return `Debes estar registrado para coger libros.`;
@@ -151,7 +165,7 @@ class Library {
         }
         return `El libro "${title}" de "${author}" no está disponible.`;
     }
-
+    @decoratorDebug
     public returnBookByDetails(title: string, author: string): string {
         if (!this.currentUser) {
             return `Debes estar logueado para devolver libros.`;
@@ -167,6 +181,7 @@ class Library {
 
 // DOM Manipulation for Adding, Removing, and Searching Books
 const library = new Library();
+
 
 // Elements
 const bookForm = document.getElementById('book-form') as HTMLFormElement;
@@ -227,7 +242,6 @@ statusDisplay.parentElement?.appendChild(deleteUserButton);
 
 // Add Book
 bookForm.addEventListener('submit', (event) => {
-    console.log("Se ha ejecutado el addBook");
     event.preventDefault();
     const title = (document.getElementById('book-title') as HTMLInputElement).value;
     const author = (document.getElementById('book-author') as HTMLInputElement).value;
@@ -236,9 +250,7 @@ bookForm.addEventListener('submit', (event) => {
     const copies = parseInt((document.getElementById('book-copies') as HTMLInputElement).value, 10);
 
     const book = new Book(title, author, year, genre, copies);
-    console.log("Se ha añadido:", book);
     library.addBook(book);
-    console.log(library);
 
     updateBooksList();
     bookForm.reset();
@@ -324,7 +336,6 @@ function updateBooksList() {
         if (currentUser) {
             if (currentUser.hasBorrowed(book)) {
                 const returnButton = document.createElement('button');
-                console.log("Hay libro prestado")
                 returnButton.textContent = 'Devolver';
                 returnButton.classList.add('return-book');
                 returnButton.dataset.title = book.title;
@@ -332,7 +343,6 @@ function updateBooksList() {
                 li.appendChild(returnButton);
             } else {
                 const borrowButton = document.createElement('button');
-                console.log("No hay libro prestado")
                 borrowButton.textContent = 'Coger';
                 borrowButton.classList.add('borrow-book');
                 borrowButton.dataset.title = book.title;
@@ -344,5 +354,17 @@ function updateBooksList() {
         booksList.appendChild(li);
     });
 }
+
+let book1 = new Book("El camino de los reyes", "Brandon Sanderson", 2010, "Fantasía", 168);
+library.addBook(book1);
+book1 = new Book("Asesinato en el Orient Express", "Agatha Christie", 1934, "Misterio", 64);
+library.addBook(book1);
+book1 = new Book("Romeo Y Julieta", "William Shakespeare", 1597, "Tragedia", 23);
+library.addBook(book1);
+book1 = new Book("El nombre del viento", "Patrick Rothfuss", 2007, "Fantasía", 72);
+library.addBook(book1);
+book1 = new Book("El problema de los tres cuerpos", "Liu Cixin", 2006, "Ciencia Ficción", 0);
+library.addBook(book1);
+updateBooksList();
 
 

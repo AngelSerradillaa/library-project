@@ -1,5 +1,20 @@
 "use strict";
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
 var _a;
+//Decorador para el debug
+function decoratorDebug(target, propertyKey, descriptor) {
+    const originalMethod = descriptor.value;
+    descriptor.value = function (...args) {
+        console.log(`Ejecutando el método "${propertyKey}" con argumentos: ${args.map(arg => JSON.stringify(arg)).join(', ')}`);
+        return originalMethod.apply(this, args);
+    };
+    return descriptor;
+}
 class Book {
     constructor(title, author, year, genre, copiesAvailable) {
         this.title = title;
@@ -48,6 +63,12 @@ class User {
         return this.borrowedBooks.has(book.title);
     }
 }
+__decorate([
+    decoratorDebug
+], User.prototype, "borrowBook", null);
+__decorate([
+    decoratorDebug
+], User.prototype, "returnBook", null);
 class Library {
     constructor() {
         this.books = [];
@@ -125,6 +146,39 @@ class Library {
         return `No has tomado prestado "${title}" de "${author}".`;
     }
 }
+__decorate([
+    decoratorDebug
+], Library.prototype, "addBook", null);
+__decorate([
+    decoratorDebug
+], Library.prototype, "removeBook", null);
+__decorate([
+    decoratorDebug
+], Library.prototype, "findBook", null);
+__decorate([
+    decoratorDebug
+], Library.prototype, "addUser", null);
+__decorate([
+    decoratorDebug
+], Library.prototype, "findUser", null);
+__decorate([
+    decoratorDebug
+], Library.prototype, "loginUser", null);
+__decorate([
+    decoratorDebug
+], Library.prototype, "logoutUser", null);
+__decorate([
+    decoratorDebug
+], Library.prototype, "deleteUser", null);
+__decorate([
+    decoratorDebug
+], Library.prototype, "getCurrentUser", null);
+__decorate([
+    decoratorDebug
+], Library.prototype, "borrowBookByDetails", null);
+__decorate([
+    decoratorDebug
+], Library.prototype, "returnBookByDetails", null);
 // DOM Manipulation for Adding, Removing, and Searching Books
 const library = new Library();
 // Elements
@@ -180,7 +234,6 @@ deleteUserButton.addEventListener('click', () => {
 (_a = statusDisplay.parentElement) === null || _a === void 0 ? void 0 : _a.appendChild(deleteUserButton);
 // Add Book
 bookForm.addEventListener('submit', (event) => {
-    console.log("Se ha ejecutado el addBook");
     event.preventDefault();
     const title = document.getElementById('book-title').value;
     const author = document.getElementById('book-author').value;
@@ -188,9 +241,7 @@ bookForm.addEventListener('submit', (event) => {
     const genre = document.getElementById('book-genre').value;
     const copies = parseInt(document.getElementById('book-copies').value, 10);
     const book = new Book(title, author, year, genre, copies);
-    console.log("Se ha añadido:", book);
     library.addBook(book);
-    console.log(library);
     updateBooksList();
     bookForm.reset();
 });
@@ -267,7 +318,6 @@ function updateBooksList() {
         if (currentUser) {
             if (currentUser.hasBorrowed(book)) {
                 const returnButton = document.createElement('button');
-                console.log("Hay libro prestado");
                 returnButton.textContent = 'Devolver';
                 returnButton.classList.add('return-book');
                 returnButton.dataset.title = book.title;
@@ -276,7 +326,6 @@ function updateBooksList() {
             }
             else {
                 const borrowButton = document.createElement('button');
-                console.log("No hay libro prestado");
                 borrowButton.textContent = 'Coger';
                 borrowButton.classList.add('borrow-book');
                 borrowButton.dataset.title = book.title;
@@ -287,3 +336,14 @@ function updateBooksList() {
         booksList.appendChild(li);
     });
 }
+let book1 = new Book("El camino de los reyes", "Brandon Sanderson", 2010, "Fantasía", 168);
+library.addBook(book1);
+book1 = new Book("Asesinato en el Orient Express", "Agatha Christie", 1934, "Misterio", 64);
+library.addBook(book1);
+book1 = new Book("Romeo Y Julieta", "William Shakespeare", 1597, "Tragedia", 23);
+library.addBook(book1);
+book1 = new Book("El nombre del viento", "Patrick Rothfuss", 2007, "Fantasía", 72);
+library.addBook(book1);
+book1 = new Book("El problema de los tres cuerpos", "Liu Cixin", 2006, "Ciencia Ficción", 0);
+library.addBook(book1);
+updateBooksList();
